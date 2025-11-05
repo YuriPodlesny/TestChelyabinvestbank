@@ -7,31 +7,23 @@ internal class Program
 {
     static async Task Main(string[] args)
     {
-        string url = "https://fias.nalog.ru/Public/Downloads/Actual/gar_delta_xml.zip";
-        string zipPath = @"C:\Gap\gar_delta_xml.zip";
-        string extractPath = @"C:\Gap\Extracted";
-
-        if (File.Exists(zipPath))
+        if (File.Exists(Constants.ZIP_PATH))
         {
             Console.WriteLine("Файл существует.");
         }
         else
         {
-            string pathDirectoryZip = @"C:\Gap";
-            Directory.CreateDirectory(pathDirectoryZip);
-
-            await GetАrchiveGar(url, zipPath);
+            Directory.CreateDirectory(Constants.PATH_DIRECTORY_ZIP);
+            await GetАrchiveGar(Constants.URL, Constants.ZIP_PATH);
         }
 
-        string pathDirectoryFiles = @"C:\Gap\Extracted";
-        Directory.CreateDirectory(pathDirectoryFiles);
-
-        bool isNotEmptyFolderExtract = Directory.GetFiles(extractPath).Length > 0 || Directory.GetDirectories(extractPath).Length > 0;
+        Directory.CreateDirectory(Constants.PATH_DIRECTORY_FILES);
+        bool isNotEmptyFolderExtract = Directory.GetFiles(Constants.EXTRACT_PATH).Length > 0 || Directory.GetDirectories(Constants.EXTRACT_PATH).Length > 0;
         if (!isNotEmptyFolderExtract)
         {
-            GetFiles(zipPath, extractPath);
+            GetFiles(Constants.ZIP_PATH, Constants.EXTRACT_PATH);
         }
-        ConvertToCSV();
+        ConvertToCSV(Constants.FOLDER_PATH, Constants.CSV_PATH);
     }
 
     /// <summary>
@@ -76,15 +68,10 @@ internal class Program
     /// <summary>
     /// Конвертация в формат csv.
     /// </summary>
-    public static void ConvertToCSV()
+    public static void ConvertToCSV(string folderPath, string csvPath)
     {
-        string folderPath = @"C:\Gap\Extracted\01";
-        string searchWord = "AS_APARTMENTS";
-
-        string csvPath = @"C:\Gap\output.csv";
-
         // Получаем массив путей к файлам
-        string[] files = Directory.GetFiles(folderPath, $"*{searchWord}*");
+        string[] files = Directory.GetFiles(folderPath, $"*{Constants.SEARCH_WORD}*");
 
         try
         {
